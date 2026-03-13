@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Chess Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="text-gray-200 min-h-screen relative">
+    <!-- Animated Background -->
+    <div class="fixed inset-0 bg-grid pointer-events-none z-0"></div>
+    <div class="fixed inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none z-0"></div>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass border-b border-yellow-900/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="Navigation.showHome()">
+                    <div class="text-3xl">♔</div>
+                    <span class="font-cinzel text-xl font-bold text-yellow-500 tracking-wider">ROYAL CHESS</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="Navigation.showHome()" class="nav-item px-3 py-2 text-sm font-medium hover:text-yellow-400 transition">Home</button>
+                    <button onclick="Navigation.showGame()" class="nav-item px-3 py-2 text-sm font-medium hover:text-yellow-400 transition">Play Now</button>
+                    <button onclick="Navigation.showLeaderboard()" class="nav-item px-3 py-2 text-sm font-medium hover:text-yellow-400 transition">Leaderboard</button>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div id="connectionStatus" class="flex items-center text-xs text-gray-400">
+                        <span class="status-dot status-offline"></span>
+                        <span>Offline</span>
+                    </div>
+                    <button onclick="Network.toggleConnection()" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-black font-bold rounded-lg text-sm transition transform hover:scale-105">
+                        Connect
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        
+        <!-- HOME PAGE -->
+        <section id="homePage" class="space-y-12">
+            <div class="text-center space-y-6 py-12">
+                <h1 class="font-cinzel text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 drop-shadow-2xl">
+                    Master the Board
+                </h1>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                    Experience chess like never before. Compete with players worldwide, climb the ranks, and claim your throne in the Royal Arena.
+                </p>
+                <div class="flex justify-center gap-4 pt-4">
+                    <button onclick="Navigation.showGame()" class="px-8 py-4 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold rounded-xl text-lg transform hover:scale-105 transition shadow-[0_0_30px_rgba(212,175,55,0.3)] hover:shadow-[0_0_50px_rgba(212,175,55,0.5)]">
+                        Play Online
+                    </button>
+                    <button onclick="Navigation.showGame()" class="px-8 py-4 glass text-yellow-400 border border-yellow-600/30 font-bold rounded-xl text-lg hover:bg-yellow-900/20 transition">
+                        Practice vs AI
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass rounded-2xl p-6 transform hover:scale-105 transition duration-300 border border-yellow-900/20">
+                    <div class="text-4xl mb-2">👥</div>
+                    <div class="text-3xl font-bold text-yellow-400" id="onlinePlayers">1,247</div>
+                    <div class="text-gray-400">Players Online</div>
+                </div>
+                <div class="glass rounded-2xl p-6 transform hover:scale-105 transition duration-300 border border-yellow-900/20">
+                    <div class="text-4xl mb-2">⚔️</div>
+                    <div class="text-3xl font-bold text-yellow-400" id="activeGames">89</div>
+                    <div class="text-gray-400">Games in Progress</div>
+                </div>
+                <div class="glass rounded-2xl p-6 transform hover:scale-105 transition duration-300 border border-yellow-900/20">
+                    <div class="text-4xl mb-2">🏆</div>
+                    <div class="text-3xl font-bold text-yellow-400">$5,000</div>
+                    <div class="text-gray-400">Monthly Prize Pool</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass rounded-xl p-6 hover:bg-white/5 transition cursor-pointer group">
+                    <div class="h-12 w-12 bg-yellow-500/20 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">🌐</div>
+                    <h3 class="font-bold text-lg mb-2 text-yellow-100">Global Multiplayer</h3>
+                    <p class="text-sm text-gray-400">Match with opponents worldwide in real-time battles</p>
+                </div>
+                <div class="glass rounded-xl p-6 hover:bg-white/5 transition cursor-pointer group">
+                    <div class="h-12 w-12 bg-yellow-500/20 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">📊</div>
+                    <h3 class="font-bold text-lg mb-2 text-yellow-100">Live Rankings</h3>
+                    <p class="text-sm text-gray-400">Track your ELO and compete for the top positions</p>
+                </div>
+                <div class="glass rounded-xl p-6 hover:bg-white/5 transition cursor-pointer group">
+                    <div class="h-12 w-12 bg-yellow-500/20 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">🤖</div>
+                    <h3 class="font-bold text-lg mb-2 text-yellow-100">AI Training</h3>
+                    <p class="text-sm text-gray-400">Practice against adjustable difficulty AI opponents</p>
+                </div>
+                <div class="glass rounded-xl p-6 hover:bg-white/5 transition cursor-pointer group">
+                    <div class="h-12 w-12 bg-yellow-500/20 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">💬</div>
+                    <h3 class="font-bold text-lg mb-2 text-yellow-100">Chat & Emotes</h3>
+                    <p class="text-sm text-gray-400">Communicate with opponents during matches</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME PAGE -->
+        <section id="gamePage" class="hidden">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="flex-1 flex flex-col items-center">
+                    <div class="mb-4 flex items-center justify-between w-full max-w-lg">
+                        <div class="flex items-center space-x-3 glass px-4 py-2 rounded-full">
+                            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-2xl">♚</div>
+                            <div>
+                                <div class="font-bold text-sm">Opponent</div>
+                                <div class="text-xs text-gray-400">ELO: 1850</div>
+                            </div>
+                            <div class="ml-2 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        </div>
+                        <div class="text-2xl font-mono font-bold text-yellow-400" id="timerBlack">10:00</div>
+                    </div>
+                    
+                    <div class="board-container">
+                        <div id="chessBoard" class="chess-board grid grid-cols-8 gap-0 w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-lg overflow-hidden">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 flex items-center justify-between w-full max-w-lg">
+                        <div class="flex items-center space-x-3 glass px-4 py-2 rounded-full">
+                            <div class="w-10 h-10 rounded-full bg-yellow-600 flex items-center justify-center text-2xl">♔</div>
+                            <div>
+                                <div class="font-bold text-sm">You</div>
+                                <div class="text-xs text-gray-400">ELO: 1820</div>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-mono font-bold text-yellow-400" id="timerWhite">10:00</div>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-80 space-y-4">
+                    <div class="glass rounded-2xl p-6 border border-yellow-900/20">
+                        <h3 class="font-cinzel text-xl font-bold mb-4 text-yellow-400">Move History</h3>
+                        <div id="moveHistory" class="h-64 overflow-y-auto space-y-2 text-sm font-mono">
+                            <div class="text-gray-500 italic">Game started...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-6 border border-yellow-900/20">
+                        <h3 class="font-cinzel text-xl font-bold mb-4 text-yellow-400">Captured Pieces</h3>
+                        <div id="capturedPieces" class="flex flex-wrap gap-2 min-h-[60px]"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="Game.resign()" class="py-3 bg-red-900/50 hover:bg-red-800 text-red-200 rounded-lg font-bold transition border border-red-800">
+                            Resign
+                        </button>
+                        <button onclick="Game.offerDraw()" class="py-3 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg font-bold transition border border-gray-600">
+                            Draw
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LEADERBOARD PAGE -->
+        <section id="leaderboardPage" class="hidden max-w-4xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="font-cinzel text-4xl font-bold text-yellow-400 mb-2">Grandmaster Leaderboard</h2>
+                <p class="text-gray-400">Top warriors of the Royal Arena</p>
+            </div>
+
+            <div class="glass rounded-2xl overflow-hidden border border-yellow-900/20">
+                <div class="grid grid-cols-12 gap-4 p-4 bg-black/40 text-yellow-600 font-bold text-sm uppercase tracking-wider border-b border-yellow-900/20">
+                    <div class="col-span-2 text-center">Rank</div>
+                    <div class="col-span-6">Player</div>
+                    <div class="col-span-2 text-center">ELO</div>
+                    <div class="col-span-2 text-center">Win Rate</div>
+                </div>
+                <div id="leaderboardList" class="divide-y divide-yellow-900/10"></div>
+            </div>
+
+            <div class="mt-6 flex justify-center gap-4">
+                <button class="px-6 py-2 glass rounded-lg hover:bg-yellow-900/20 transition text-yellow-400 border border-yellow-900/30">Weekly</button>
+                <button class="px-6 py-2 bg-yellow-600 text-black rounded-lg font-bold shadow-lg shadow-yellow-600/20">All Time</button>
+                <button class="px-6 py-2 glass rounded-lg hover:bg-yellow-900/20 transition text-yellow-400 border border-yellow-900/30">Friends</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="glass rounded-3xl p-8 max-w-md w-full mx-4 modal-enter border border-yellow-500/30 shadow-[0_0_50px_rgba(212,175,55,0.2)]">
+            <div class="text-center space-y-4">
+                <div class="text-6xl mb-4" id="resultIcon">👑</div>
+                <h2 class="font-cinzel text-3xl font-bold text-yellow-400" id="resultTitle">Victory!</h2>
+                <p class="text-gray-300" id="resultMessage">You defeated your opponent by checkmate.</p>
+                
+                <div class="flex justify-center gap-8 py-4">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-white">+25</div>
+                        <div class="text-xs text-gray-400">ELO Gained</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-white">12</div>
+                        <div class="text-xs text-gray-400">Win Streak</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button onclick="Modal.close(); Navigation.showGame();" class="flex-1 py-3 bg-yellow-600 hover:bg-yellow-500 text-black font-bold rounded-xl transition">
+                        Play Again
+                    </button>
+                    <button onclick="Modal.close(); Navigation.showHome();" class="flex-1 py-3 glass hover:bg-white/10 text-white font-bold rounded-xl transition border border-white/20">
+                        Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/leaderboard.js"></script>
+    <script src="js/network.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
